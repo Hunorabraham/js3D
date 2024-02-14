@@ -122,11 +122,18 @@ class octaahedron{
         this.rot = rot;
         this.localVerts = [];
         //generate, more accurately hard code the 4 vertecies
-        let r = size* Math.sqrt(2)*2/3;
+        let r = size/Math.sqrt(3); // compacted equation: [sqrt(3)/2 /3] *2
+        let h = size*Math.sqrt(6)/3;
+        let sixty = Math.PI/3;
+        let onetwenty = Math.PI/3*2;
         for(let i = 0; i < 3; i++){
-            this.localVerts.push(new Vec3(Math.sin(i*Math.PI/3*2)*r,-size/3,Math.cos(i*Math.PI/3*2)*r));
+            this.localVerts.push(new Vec3(Math.sin(i*onetwenty)*r,-h/2,Math.cos(i*onetwenty)*r));
         }
-        this.Triangles = [1,3,2, 1,2,0, 3,0,2, 0,3,1];
+        for(let i = 0; i < 3; i++){
+            this.localVerts.push(new Vec3(Math.sin(i*onetwenty+sixty)*r,h/2,Math.cos(i*onetwenty+sixty)*r));
+        }
+        //[0,1,2, 3,4,5, 0,4,3, 0,3,1, 1,3,5, 1,5,2, 2,5,4, 2,4,0]
+        this.Triangles = [0,2,1, 3,4,5, 1,4,3, 0,1,3, 3,5,0, 2,0,5, 2,5,4, 2,4,1];
     }
     load(){
         let allRot = rotationMatrixAll(this.rot.x,this.rot.y,this.rot.z);
@@ -338,7 +345,7 @@ function loh(){
 }
 //loadTri(-200,200,1600,0,300,1600,200,200,1600,new color(255,255,0,1));
 
-let c = new tetrahedron(new Vec3(0,0,1600),200,new Vec3(Math.PI/4,Math.PI/2,0));
+let c = new octaahedron(new Vec3(0,0,1600),200,new Vec3(Math.PI/4,Math.PI/2,0));
 let fuck = 0;
 let ID = setInterval(() => {
     c.load();
