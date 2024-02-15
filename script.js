@@ -165,6 +165,10 @@ const planc = deltaTime/1000;
 
 let vertsScreen = [];
 let vertsWorld = [];
+
+let verts5World = [];
+let color5Buff = [];
+
 let colorBuff = [];
 //draw functions
 function drawPrimitive(x1,y1,x2,y2,x3,y3,color){
@@ -345,7 +349,7 @@ function loh(){
 }
 //loadTri(-200,200,1600,0,300,1600,200,200,1600,new color(255,255,0,1));
 
-let c = new octaahedron(new Vec3(0,0,1600),200,new Vec3(Math.PI/4,Math.PI/2,0));
+let c = new cube(new Vec3(0,0,1600),200,new Vec3(Math.PI/4,Math.PI/2,0));
 let fuck = 0;
 let ID = setInterval(() => {
     c.load();
@@ -354,8 +358,8 @@ let ID = setInterval(() => {
     draw.fillRect(0,0,can.width,can.height);
     drawTris(true);
     c.rot.x += 16/1000*Math.PI;
-    c.rot.y += 16/1000*Math.PI;
-    c.rot.z += 16/1000*Math.PI/2; 
+    c.rot.y -= 16/1000*Math.PI;
+    c.rot.z += 16/1000*Math.PI/2;
     //c.pos.y += 16/1000*-1000;
     clearEverything();
 }, 16);
