@@ -159,7 +159,6 @@ const can = document.querySelectorAll("canvas")[0];
 const draw = can.getContext("2d");
 const K1 = can.width*2;
 
-
 const deltaTime = 16;
 const planc = deltaTime/1000;
 
@@ -179,6 +178,8 @@ function drawPrimitive(x1,y1,x2,y2,x3,y3,color){
     draw.lineTo(x1,y1);
     draw.fillStyle = color;
     draw.fill();
+    draw.strokeStyle = color;
+    draw.stroke();
     draw.closePath();
 }
 function drawTris(sorting){
@@ -357,9 +358,9 @@ let ID = setInterval(() => {
     draw.fillStyle = "hsl(240,50%,60%)";
     draw.fillRect(0,0,can.width,can.height);
     drawTris(true);
-    c.rot.x += 16/1000*Math.PI;
-    c.rot.y -= 16/1000*Math.PI;
-    c.rot.z += 16/1000*Math.PI/2;
+    c.rot.x += Math.PI*planc/2;
+    c.rot.y -= Math.PI*planc/2;
+    c.rot.z += Math.PI/2*planc/2;
     //c.pos.y += 16/1000*-1000;
     clearEverything();
-}, 16);
+}, deltaTime);
