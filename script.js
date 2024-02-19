@@ -154,6 +154,43 @@ class octaahedron{
         }
     }
 }
+class rhobicdodecahedron{
+    constructor(pos,size,rot){
+        this.pos = pos;
+        this.rot = rot;
+        this.localVerts = [];
+        //generate and hard code vertecies
+        //cube
+        for(let i = -1; i < 2; i+=2){
+            for(let j = -1; j < 2; j+=2){
+                for(let k = -1; k < 2; k+=2){
+                    this.localVerts.push(new Vec3(size*i/2,size*j/2,size*k/2));
+                }
+            }
+        }
+        //extra 6
+        // at this point I realized that I had fucked up, and I chose the noble option of giving up
+        //what I fucked up is the direction the triangles face, and light, if the dotproduct of the surfacenormal and lightnormal is positive THEN it should be the shadow colour, and when it is negative should it be the light colour. And I also messed up the order of the vertecies of the triangles so evrything is lit form below but they're also inside out so it looks like everything is ok, but the computer is actually in pain recieving unimaginable torture.
+    }
+    load(){
+        let allRot = rotationMatrixAll(this.rot.x,this.rot.y,this.rot.z);
+        for(let i = 0; i < this.Triangles.length; i+=3){
+            //here should go to rotation calculations
+            let vert1 = matrixMult(this.localVerts[this.Triangles[i]],allRot);
+            let vert2 = matrixMult(this.localVerts[this.Triangles[i+1]],allRot);
+            let vert3 = matrixMult(this.localVerts[this.Triangles[i+2]],allRot);
+
+            // the vectors of two sides(originating from the same point)
+            let a = vectorSub(vert3,vert1);
+            let b = vectorSub(vert2,vert1);
+            let surfaceNormal = normalize(cross(a,b));
+            let l = dot(globalLight,surfaceNormal);
+            let face = (dot(new Vec3(0,0,1),surfaceNormal)<0)?0:1;
+            //now wolrd position and loading
+            loadTri(vert1.x+this.pos.x,vert1.y+this.pos.y,vert1.z+this.pos.z,vert2.x+this.pos.x,vert2.y+this.pos.y,vert2.z+this.pos.z,vert3.x+this.pos.x,vert3.y+this.pos.y,vert3.z+this.pos.z,triLinearBlend2(lightColor,new color(6,50,60,face,"hsla").HSLToRGB(),ambientLight,l));
+        }
+    }
+}
 //draw constants
 const can = document.querySelectorAll("canvas")[0];
 const draw = can.getContext("2d");
@@ -164,9 +201,6 @@ const planc = deltaTime/1000;
 
 let vertsScreen = [];
 let vertsWorld = [];
-
-let verts5World = [];
-let color5Buff = [];
 
 let colorBuff = [];
 //draw functions
@@ -350,7 +384,7 @@ function loh(){
 }
 //loadTri(-200,200,1600,0,300,1600,200,200,1600,new color(255,255,0,1));
 
-let c = new cube(new Vec3(0,0,1600),200,new Vec3(Math.PI/4,Math.PI/2,0));
+let c = new octaahedron(new Vec3(0,0,1600),200,new Vec3(Math.PI/4,Math.PI/2,0));
 let fuck = 0;
 let ID = setInterval(() => {
     c.load();
